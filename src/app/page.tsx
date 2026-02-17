@@ -11,8 +11,10 @@ import {
   Zap,
   Droplets,
   AlertTriangle,
-  Radio
+  Radio,
+  Settings
 } from "lucide-react";
+import Link from "next/link";
 
 import StatusCard from "@/components/StatusCard";
 import WaterLevel from "@/components/WaterLevel";
@@ -119,6 +121,13 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
+            <Link
+              href="/settings"
+              className="hidden sm:flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5 backdrop-blur-md transition hover:bg-white/10"
+            >
+              <Settings className="h-4 w-4 text-white/50" />
+              <span className="text-xs font-medium text-white/70">Settings</span>
+            </Link>
             <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5 backdrop-blur-md">
               <div className={`h-2 w-2 rounded-full ${isOnline ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`} />
               <span className="text-xs font-medium text-white/70">
@@ -126,7 +135,7 @@ export default function Dashboard() {
               </span>
             </div>
             <div className="h-10 w-10 overflow-hidden rounded-full border border-white/10 bg-white/5 p-1">
-              <div className="h-full w-full rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 animate-pulse" />
+              <Image src="/next.svg" width={40} height={40} alt="User" className="h-full w-full rounded-full opacity-50" />
             </div>
           </div>
         </header>
