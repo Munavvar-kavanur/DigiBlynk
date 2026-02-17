@@ -183,7 +183,7 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
             </div>
 
             {/* Critical Alert Overlay */}
-            {!bottomSensor && (
+            {!bottomSensor && !topSensor && (
                 <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
                     <div className="flex flex-col items-center gap-3 animate-pulse">
                         <div className="p-4 rounded-full bg-rose-500/20 backdrop-blur-xl border border-rose-500/30">
