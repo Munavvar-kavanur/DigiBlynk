@@ -185,16 +185,18 @@ export default function Dashboard() {
             {/* Main Control Panel */}
             <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
               {/* Motor Control */}
-              <div className="glass-panel relative flex flex-col items-center justify-center rounded-3xl p-8 backdrop-blur-xl">
-                <div className="absolute top-6 left-6 flex items-center gap-2">
+              <div className="glass-panel relative flex flex-col justify-between rounded-3xl p-6 backdrop-blur-xl sm:p-8">
+                <div className="flex items-center gap-2 pb-4">
                   <Radio className={`h-4 w-4 ${toggling ? "animate-spin text-blue-400" : "text-white/20"}`} />
                   <span className="text-xs font-medium uppercase tracking-wider text-white/40">Control Node</span>
                 </div>
-                <MotorControl
-                  isOn={isMotorOn}
-                  onToggle={handleToggle}
-                  isPending={toggling}
-                />
+                <div className="flex flex-1 items-center justify-center">
+                  <MotorControl
+                    isOn={isMotorOn}
+                    onToggle={handleToggle}
+                    isPending={toggling}
+                  />
+                </div>
               </div>
 
               {/* Quick Actions / More Info */}
