@@ -34,7 +34,7 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
             x: ["0%", "-50%"],
             transition: {
                 repeat: Infinity,
-                ease: "linear",
+                ease: "linear" as const,
                 duration: 8 + i * 4, // Variable speeds
                 repeatType: "loop" as const,
             },
