@@ -17,7 +17,9 @@ export async function POST(request: NextRequest) {
         const blynkResponse = await fetch(blynkUrl);
 
         if (!blynkResponse.ok) {
-            throw new Error('Failed to update Blynk');
+            const errorText = await blynkResponse.text();
+            console.error(`Blynk API Error: ${blynkResponse.status} - ${errorText}`);
+            throw new Error(`Failed to update Blynk: ${errorText}`);
         }
 
         // 2. Update MongoDB
