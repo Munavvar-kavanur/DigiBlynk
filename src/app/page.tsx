@@ -97,10 +97,9 @@ export default function Dashboard() {
   }
 
   // Derive logical states
-  const isMotorOn = state.v0 == 1;
+  // V3 is Motor Status (0=OFF, 1=ON)
+  const isMotorOn = state.v3 == 1;
   const isOnline = true; // Assuming API response means online
-  const tankPercentage = state.v2 == 1 ? 100 : state.v1 == 1 ? 60 : 10;
-
 
 
   // Handle Manual Refresh
@@ -168,8 +167,8 @@ export default function Dashboard() {
           {/* Left Column: Visual Tank */}
           <div className="lg:col-span-4 h-full min-h-[500px]">
             <WaterLevel
-              topSensor={state.v2 == 1}
-              bottomSensor={state.v1 == 1}
+              v1={state.v1}
+              v2={state.v2}
             />
           </div>
 

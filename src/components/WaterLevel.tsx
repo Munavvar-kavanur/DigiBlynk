@@ -4,27 +4,34 @@ import { motion } from "framer-motion";
 import { Droplets, AlertTriangle, Waves } from "lucide-react";
 
 interface WaterLevelProps {
-    topSensor: boolean;
-    bottomSensor: boolean;
+    v1: number; // Bottom Sensor (0=Wet, 1=Dry)
+    v2: number; // Top Sensor (0=Wet, 1=Dry)
 }
 
-export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps) {
+export default function WaterLevel({ v1, v2 }: WaterLevelProps) {
     let waterLevel = 0;
     let statusColor = "from-rose-500 to-rose-600";
     let statusText = "Critically Low";
     let glowColor = "rgba(244, 63, 94, 0.5)"; // Red
 
-    if (topSensor) {
-        waterLevel = 92; // Don't go 100% to keep waves visible
+    // Logic: 0 = Wet, 1 = Dry
+    const isBottomWet = v1 === 0;
+    const isTopWet = v2 === 0;
+
+    if (isBottomWet && isTopWet) {
+        // Both Wet -> Full
+        waterLevel = 92;
         statusColor = "from-emerald-400 to-emerald-600";
         statusText = "Full Capacity";
         glowColor = "rgba(52, 211, 153, 0.5)"; // Emerald
-    } else if (bottomSensor) {
+    } else if (isBottomWet && !isTopWet) {
+        // Bottom Wet, Top Dry -> Half/Medium
         waterLevel = 55;
         statusColor = "from-blue-400 to-blue-600";
         statusText = "Water Available";
         glowColor = "rgba(59, 130, 246, 0.5)"; // Blue
     } else {
+        // Both Dry (or Bottom Dry) -> Empty
         waterLevel = 8;
         statusText = "Tank Empty";
     }
@@ -62,8 +69,8 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
                             {waterLevel === 92 ? "100" : waterLevel === 8 ? "0" : waterLevel}%
                         </span>
                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 w-fit backdrop-blur-md`}>
-                            <div className={`h-1.5 w-1.5 rounded-full ${topSensor ? "bg-emerald-400 shadow-[0_0_8px_#34d399]" : bottomSensor ? "bg-blue-400 shadow-[0_0_8px_#60a5fa]" : "bg-rose-500 shadow-[0_0_8px_#f43f5e]"}`} />
-                            <span className={`text-xs font-semibold ${topSensor ? "text-emerald-400" : bottomSensor ? "text-blue-400" : "text-rose-400"}`}>
+                            <div className={`h-1.5 w-1.5 rounded-full ${isTopWet ? "bg-emerald-400 shadow-[0_0_8px_#34d399]" : isBottomWet ? "bg-blue-400 shadow-[0_0_8px_#60a5fa]" : "bg-rose-500 shadow-[0_0_8px_#f43f5e]"}`} />
+                            <span className={`text-xs font-semibold ${isTopWet ? "text-emerald-400" : isBottomWet ? "text-blue-400" : "text-rose-400"}`}>
                                 {statusText}
                             </span>
                         </div>
@@ -161,9 +168,9 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
             <div className="absolute right-6 bottom-10 z-50 flex flex-col gap-8">
                 {/* Top Sensor Mark */}
                 <div className="relative group">
-                    <div className={`absolute -left-12 top-1/2 -translate-y-1/2 h-[1px] w-8 ${topSensor ? "bg-emerald-500/50" : "bg-white/10"}`} />
-                    <div className={`flex items-center justify-center p-2 rounded-xl backdrop-blur-md border border-white/5 bg-black/40 shadow-lg ${topSensor ? "border-emerald-500/50" : ""}`}>
-                        <div className={`h-2 w-2 rounded-full ${topSensor ? "bg-emerald-400 shadow-[0_0_10px_#34d399]" : "bg-white/10"}`} />
+                    <div className={`absolute -left-12 top-1/2 -translate-y-1/2 h-[1px] w-8 ${isTopWet ? "bg-emerald-500/50" : "bg-white/10"}`} />
+                    <div className={`flex items-center justify-center p-2 rounded-xl backdrop-blur-md border border-white/5 bg-black/40 shadow-lg ${isTopWet ? "border-emerald-500/50" : ""}`}>
+                        <div className={`h-2 w-2 rounded-full ${isTopWet ? "bg-emerald-400 shadow-[0_0_10px_#34d399]" : "bg-white/10"}`} />
                     </div>
                     <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 text-[10px] font-medium text-white/30 uppercase tracking-widest pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         Top Limit
@@ -172,9 +179,9 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
 
                 {/* Bottom Sensor Mark */}
                 <div className="relative group">
-                    <div className={`absolute -left-12 top-1/2 -translate-y-1/2 h-[1px] w-8 ${bottomSensor ? "bg-blue-500/50" : "bg-white/10"}`} />
-                    <div className={`flex items-center justify-center p-2 rounded-xl backdrop-blur-md border border-white/5 bg-black/40 shadow-lg ${bottomSensor ? "border-blue-500/50" : ""}`}>
-                        <div className={`h-2 w-2 rounded-full ${bottomSensor ? "bg-blue-400 shadow-[0_0_10px_#60a5fa]" : "bg-white/10"}`} />
+                    <div className={`absolute -left-12 top-1/2 -translate-y-1/2 h-[1px] w-8 ${isBottomWet ? "bg-blue-500/50" : "bg-white/10"}`} />
+                    <div className={`flex items-center justify-center p-2 rounded-xl backdrop-blur-md border border-white/5 bg-black/40 shadow-lg ${isBottomWet ? "border-blue-500/50" : ""}`}>
+                        <div className={`h-2 w-2 rounded-full ${isBottomWet ? "bg-blue-400 shadow-[0_0_10px_#60a5fa]" : "bg-white/10"}`} />
                     </div>
                     <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 text-[10px] font-medium text-white/30 uppercase tracking-widest pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         Btm Limit
@@ -183,7 +190,7 @@ export default function WaterLevel({ topSensor, bottomSensor }: WaterLevelProps)
             </div>
 
             {/* Critical Alert Overlay */}
-            {!bottomSensor && !topSensor && (
+            {!isBottomWet && !isTopWet && (
                 <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
                     <div className="flex flex-col items-center gap-3 animate-pulse">
                         <div className="p-4 rounded-full bg-rose-500/20 backdrop-blur-xl border border-rose-500/30">
