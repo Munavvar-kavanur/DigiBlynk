@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -95,6 +95,17 @@ export default function Dashboard() {
   const isOnline = true; // Assuming API response means online
   const tankPercentage = state.v2 == 1 ? 100 : state.v1 == 1 ? 60 : 10;
 
+  // Sync with Cloud on Mount
+  useEffect(() => {
+    fetch("/api/device/sync").then(() => mutate());
+  }, []);
+
+  // Handle Manual Refresh
+  const handleRefresh = async () => {
+    await fetch("/api/device/sync");
+    mutate();
+  };
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-black text-white selection:bg-blue-500/30">
       {/* Background Ambience */}
@@ -121,6 +132,14 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={handleRefresh}
+              className="hidden sm:flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5 backdrop-blur-md transition hover:bg-white/10"
+              title="Force Sync with Device"
+            >
+              <Activity className="h-4 w-4 text-emerald-400" />
+              <span className="text-xs font-medium text-white/70">Sync</span>
+            </button>
             <Link
               href="/settings"
               className="hidden sm:flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5 backdrop-blur-md transition hover:bg-white/10"
