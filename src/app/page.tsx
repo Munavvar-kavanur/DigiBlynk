@@ -28,7 +28,13 @@ export default function Dashboard() {
     shouldRetryOnError: true,
   });
 
+  /* State */
   const [toggling, setToggling] = useState(false);
+
+  // Sync with Cloud on Mount (Moved above conditional returns to satisfy React Hook rules)
+  useEffect(() => {
+    fetch("/api/device/sync").then(() => mutate());
+  }, []);
 
   const handleToggle = async () => {
     if (!state) return;
@@ -95,10 +101,7 @@ export default function Dashboard() {
   const isOnline = true; // Assuming API response means online
   const tankPercentage = state.v2 == 1 ? 100 : state.v1 == 1 ? 60 : 10;
 
-  // Sync with Cloud on Mount
-  useEffect(() => {
-    fetch("/api/device/sync").then(() => mutate());
-  }, []);
+
 
   // Handle Manual Refresh
   const handleRefresh = async () => {
